@@ -10,8 +10,11 @@ services:
         build: .docker/php
         ports:
             - 5173:5173
+        working_dir: /var/www/
         volumes:
             - .:/var/www:cached
+        networks:
+            - app-network
 
     ####################################################################################################
     # Nginx
@@ -26,6 +29,8 @@ services:
             - .docker/nginx/nginx.conf:/etc/nginx/nginx.conf
         depends_on:
             - php
+        networks:
+            - app-network
 
     ####################################################################################################
     # DATABASE (MySQL)
@@ -41,9 +46,9 @@ services:
             - .docker/db/sql:/docker-entrypoint-initdb.d
         environment:
             MYSQL_ROOT_PASSWORD: root
-            MYSQL_DATABASE: refactorian
-            MYSQL_USER: refactorian
-            MYSQL_PASSWORD: refactorian
+            MYSQL_DATABASE: app
+            MYSQL_USER: mharkoz
+            MYSQL_PASSWORD: 122436
 
     # ####################################################################################################
     # # DATABASE (MariaDB)
@@ -59,9 +64,9 @@ services:
     #         - .docker/db/sql:/docker-entrypoint-initdb.d
     #     environment:
     #         MYSQL_ROOT_PASSWORD: root
-    #         MYSQL_DATABASE: laravel_db_name
-    #         MYSQL_USER: laravel_db_user
-    #         MYSQL_PASSWORD: laravel_db_pass
+    #         MYSQL_DATABASE: app
+    #         MYSQL_USER: mharkoz
+    #         MYSQL_PASSWORD: 122436
 
     ####################################################################################################
     # phpMyAdmin
@@ -108,3 +113,34 @@ services:
         - .docker/redis/data:/data
         ports:
         - 6379:6379
+    ####################################################################################################
+    # NPM
+    ####################################################################################################
+    # npm:
+    #     container_name: nodeJs
+    #     image: node:18
+    #     command: npx vite
+    #     volumes:
+    #         - ./:/var/www
+    #     ports:
+    #     - 4000:4000
+    #     networks:
+    #         - app-network
+    # ===== Worker Services =====
+    # Npm Watch Service
+    # npm-dev:
+    #     container_name: npm-watch
+    #     image: node:18
+    #     restart: always
+    #     working_dir: /var/www/
+    #     entrypoint: ['npx', 'vite']
+    #     user: node
+    #     environment:
+    #         NPM_CONFIG_LOGLEVEL: warn
+    #     volumes:
+    #         - .:/var/www
+    #     networks:
+    #         - app-network
+networks:
+    app-network:
+        driver: bridge

@@ -52,7 +52,6 @@
     - `docker compose build`
 - Create and start containers
     - `docker compose up -d`
-- Stop and remove containers, networks
 - Parar ou remover container e rede de conexão
     - `docker compose down`
 - Parar todos os serviços
@@ -106,10 +105,18 @@
     - `vendor/bin/rector process`
 
 # TODO
-- Improve environment 
-- Add more containers
+ - a máquina deve ter instalado o node js versão 18.
+ - após instalação, rode o comando em um terminal:
+ ```shell
+  
+  # Ambiente de desenvolvimento.
+  npm run dev 
 
+  # Ambiente de produção.
+  npm run build
+ ```
 ---
+
 
 ## Projeto name
 
